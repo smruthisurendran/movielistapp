@@ -1,0 +1,31 @@
+#movieContentContainer {
+  padding: 10px;
+  background-color: #171717;
+  color: #ffffff;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+}
+
+#content-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-height: 87vh;
+  overflow: auto;
+  scrollbar-width: none;
+}
+#content-container::after {
+  content: "";
+  flex-basis: 32%;
+}
+
+#card-content-container {
+  max-width: 32%;
+  min-width: 32%;
+  margin-bottom: 10px;
+}
+
+#loadIcon {
+  align-content: center;
+}

@@ -1,0 +1,17 @@
+#cardContainer {
+  background-color: #171717;
+  color: #ffffff;
+  height: 100%;
+}
+
+#cardMediaContent {
+  width: 100%;
+  height: auto;
+}
+
+#cardTypography {
+  color: #ffffff;
+  font-family: Titillium Web;
+  font-size: 13px;
+  text-align: center;
+}

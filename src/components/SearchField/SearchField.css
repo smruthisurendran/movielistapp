@@ -1,0 +1,28 @@
+.search-container {
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+}
+
+.MuiTextField-root {
+  flex-grow: 1;
+}
+
+.custom-placeholder input {
+  color: #ffffff;
+  font-family: "Titillium Web";
+  font-size: "13px";
+}
+
+.custom-placeholder input::placeholder {
+  color: #ffffff;
+  opacity: 0.5;
+}
+
+.custom-placeholder .MuiOutlinedInput-root {
+  border: 1px solid #ffffff;
+  border-radius: 50px;
+  height: 5vh;
+  width: 100%;
+  box-sizing: border-box;
+}

@@ -1,0 +1,13 @@
+#noContent {
+  width: 100%;
+  height: 87vh;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+}
+#noContentTypography {
+  color: #ffffff;
+  font-family: Titillium Web;
+  font-size: 13px;
+  text-align: center;
+}

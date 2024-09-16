@@ -1,0 +1,24 @@
+#navBar {
+  background-color: #171717;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  left: 0;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  top: 0;
+  position: sticky;
+  overflow: hidden;
+}
+
+#navTitle {
+  display: flex;
+}
+
+#navIconButton {
+  color: #ffffff;
+}
+
+#navTypography {
+  padding-top: 8px;
+}
