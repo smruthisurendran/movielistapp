@@ -40,7 +40,7 @@ const MovieContent = () => {
 				//Detect when scrolled to the bottom
 				if (
 					element.clientHeight + element.scrollTop >=
-						element.scrollHeight &&
+						element.scrollHeight - 200 &&
 					hasMore &&
 					!status &&
 					!forbiddenPages
