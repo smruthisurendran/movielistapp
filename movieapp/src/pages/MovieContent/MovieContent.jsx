@@ -9,64 +9,81 @@ import { ROMANTIC_COMEDY, SCROLL_EVENT } from "../../core/utils/constant";
 import "./MovieContent.css";
 
 const MovieContent = () => {
-  const { content, currentPage, hasMore, status, searchQuery, forbiddenPages } =
-    useSelector((state) => state.content);
-  const dispatch = useDispatch();
-  const hasFetch = useRef(false);
+	const {
+		content,
+		currentPage,
+		hasMore,
+		status,
+		searchQuery,
+		forbiddenPages,
+	} = useSelector((state) => state.content);
+	const dispatch = useDispatch();
+	const hasFetch = useRef(false);
+	const contentRef = useRef();
 
-  useEffect(() => {
-    dispatch(setNavTitle(ROMANTIC_COMEDY));
-    //Fetch the first page on mount
-    if (!forbiddenPages && !hasFetch.current && currentPage === 1 && !status) {
-      dispatch(loadContent(currentPage));
-      hasFetch.current = true;
-    }
+	useEffect(() => {
+		dispatch(setNavTitle(ROMANTIC_COMEDY));
+		//Fetch the first page on mount
+		if (
+			!forbiddenPages &&
+			!hasFetch.current &&
+			currentPage === 1 &&
+			!status
+		) {
+			dispatch(loadContent(currentPage));
+			hasFetch.current = true;
+		}
+		if (contentRef) {
+			const element = contentRef.current;
+			//To load more data while scrolling to bottom
+			const loadMoreData = () => {
+				//Detect when scrolled to the bottom
+				if (
+					element.clientHeight + element.scrollTop >=
+						element.scrollHeight &&
+					hasMore &&
+					!status &&
+					!forbiddenPages
+				) {
+					dispatch(loadContent(currentPage));
+				}
+			};
 
-    //To load more data while scrolling to bottom
-    const loadMoreData = () => {
-      //Detect when scrolled to the bottom
-      if (
-        window.innerHeight + document.documentElement.scrollTop >=
-          document.documentElement.offsetHeight - 200 &&
-        hasMore &&
-        !status &&
-        !forbiddenPages
-      ) {
-        dispatch(loadContent(currentPage));
-      }
-    };
+			//To add the scroll event listener
+			element.addEventListener(SCROLL_EVENT, loadMoreData);
+			//To cleanup the event listener on component unmount
+			return () =>
+				element.removeEventListener(SCROLL_EVENT, loadMoreData);
+		}
+	}, [dispatch, currentPage, hasMore, status, forbiddenPages]);
 
-    //To add the scroll event listener
-    window.addEventListener(SCROLL_EVENT, loadMoreData);
+	//To filter the contents
+	const filteredMovies = content?.filter((movie) =>
+		movie.name.toLowerCase().includes(searchQuery.toLowerCase())
+	);
 
-    //To cleanup the event listener on component unmount
-    return () => window.removeEventListener(SCROLL_EVENT, loadMoreData);
-  }, [dispatch, currentPage, hasMore, status, forbiddenPages]);
-
-  //To filter the contents
-  const filteredMovies = content?.filter((movie) =>
-    movie.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  return (
-    <div id="movieContentContainer">
-      <NavBar />
-      <div id="content-container">
-        {filteredMovies?.length ? (
-          filteredMovies?.map((item, index) => (
-            <div key={`${item.name}-${index}`} id="card-content-container">
-              <CardItem
-                index={index}
-                itemName={item.name}
-                imageURL={item["poster-image"]}
-              />
-            </div>
-          ))
-        ) : (
-          <NoContent />
-        )}
-      </div>
-    </div>
-  );
+	return (
+		<div id="movieContentContainer">
+			<NavBar />
+			<div ref={contentRef} id="content-container">
+				{filteredMovies?.length ? (
+					filteredMovies?.map((item, index) => (
+						<div
+							key={`${item.name}-${index}`}
+							id="card-content-container"
+						>
+							<CardItem
+								index={index}
+								itemName={item.name}
+								imageURL={item["poster-image"]}
+							/>
+						</div>
+					))
+				) : (
+					<NoContent />
+				)}
+			</div>
+		</div>
+	);
 };
 export default MovieContent;
