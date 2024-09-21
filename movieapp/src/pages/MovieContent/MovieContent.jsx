@@ -1,11 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loadContent } from "../redux/movieSlice";
 
-import CardItem from "../components/MovieListCard/CardItem";
+import { loadContent, setNavTitle } from "../../redux/movieSlice";
+import CardItem from "../../components/MovieListCard/CardItem";
+import NavBar from "../../components/NavBar/NavBar";
+import NoContent from "../../components/NoContent/NoContent";
+import { ROMANTIC_COMEDY, SCROLL_EVENT } from "../../core/utils/constant";
 import "./MovieContent.css";
-import NavBar from "../components/NavBar/NavBar";
-import NoContent from "../components/NoContent/NoContent";
 
 const MovieContent = () => {
   const { content, currentPage, hasMore, status, searchQuery, forbiddenPages } =
@@ -14,11 +15,16 @@ const MovieContent = () => {
   const hasFetch = useRef(false);
 
   useEffect(() => {
+    dispatch(setNavTitle(ROMANTIC_COMEDY));
+    //Fetch the first page on mount
     if (!forbiddenPages && !hasFetch.current && currentPage === 1 && !status) {
       dispatch(loadContent(currentPage));
       hasFetch.current = true;
     }
+
+    //To load more data while scrolling to bottom
     const loadMoreData = () => {
+      //Detect when scrolled to the bottom
       if (
         window.innerHeight + document.documentElement.scrollTop >=
           document.documentElement.offsetHeight - 200 &&
@@ -29,10 +35,15 @@ const MovieContent = () => {
         dispatch(loadContent(currentPage));
       }
     };
-    window.addEventListener("scroll", loadMoreData);
-    return () => window.removeEventListener("scroll", loadMoreData);
+
+    //To add the scroll event listener
+    window.addEventListener(SCROLL_EVENT, loadMoreData);
+
+    //To cleanup the event listener on component unmount
+    return () => window.removeEventListener(SCROLL_EVENT, loadMoreData);
   }, [dispatch, currentPage, hasMore, status, forbiddenPages]);
 
+  //To filter the contents
   const filteredMovies = content?.filter((movie) =>
     movie.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -41,16 +52,19 @@ const MovieContent = () => {
     <div id="movieContentContainer">
       <NavBar />
       <div id="content-container">
-        {filteredMovies?.map((item, index) => (
-          <div key={`${item.name}-${index}`} id="card-content-container">
-            <CardItem
-              index={index}
-              itemName={item.name}
-              imageURL={item["poster-image"]}
-            />
-          </div>
-        ))}
-        {!filteredMovies?.length && <NoContent />}
+        {filteredMovies?.length ? (
+          filteredMovies?.map((item, index) => (
+            <div key={`${item.name}-${index}`} id="card-content-container">
+              <CardItem
+                index={index}
+                itemName={item.name}
+                imageURL={item["poster-image"]}
+              />
+            </div>
+          ))
+        ) : (
+          <NoContent />
+        )}
       </div>
     </div>
   );

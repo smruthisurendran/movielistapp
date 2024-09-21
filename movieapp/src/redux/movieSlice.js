@@ -1,13 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchDataPage } from "../services/dataApi";
 
+import { FORBIDDEN_MSG } from "../core/utils/constant";
+
+//Async thunk to fetch the images
 export const loadContent = createAsyncThunk(
   "content/loadContent",
   async (pageNum, { rejectWithValue }) => {
     try {
       const response = await fetchDataPage(pageNum);
       if (response.forbidden) {
-        return rejectWithValue("Access Forbidden: 403");
+        return rejectWithValue(FORBIDDEN_MSG);
       }
       return response.data.page["content-items"].content;
     } catch (error) {
@@ -16,6 +19,7 @@ export const loadContent = createAsyncThunk(
   }
 );
 
+//Defined the initial state
 const initialState = {
   content: [],
   currentPage: 1,
@@ -24,14 +28,19 @@ const initialState = {
   searchQuery: "",
   error: null,
   forbiddenPages: false,
+  navTitle: "",
 };
 
+//Creation of slice
 const movieSlice = createSlice({
   name: "content",
   initialState,
   reducers: {
     setSearchQuery: (state, action) => {
       state.searchQuery = action.payload;
+    },
+    setNavTitle: (state, action) => {
+      state.navTitle = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -51,8 +60,7 @@ const movieSlice = createSlice({
       })
       .addCase(loadContent.rejected, (state, action) => {
         state.status = false;
-
-        if (action.payload === "Access Forbidden: 403") {
+        if (action.payload === FORBIDDEN_MSG) {
           state.forbiddenPages = true;
         } else {
           state.error = action.payload;
@@ -61,5 +69,5 @@ const movieSlice = createSlice({
   },
 });
 
-export const { setSearchQuery } = movieSlice.actions;
+export const { setSearchQuery, setNavTitle } = movieSlice.actions;
 export default movieSlice.reducer;

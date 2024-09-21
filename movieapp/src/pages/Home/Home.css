@@ -1,0 +1,23 @@
+#movieContentContainer {
+  padding: 10px;
+  background-color: #171717;
+  color: #ffffff;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  height: 100%;
+}
+
+#buttonStyle {
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  box-shadow: 2px 2px 2px aliceblue;
+}
+
+#paperPattern {
+  background-color: #171717;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}

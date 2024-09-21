@@ -14,4 +14,8 @@
   font-family: Titillium Web;
   font-size: 13px;
   text-align: center;
+  width: 100%;
+  white-space: noWrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
